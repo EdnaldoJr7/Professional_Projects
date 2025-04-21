@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Chamados</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+        }
+
+        #status_ini{
+            color: red;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .chamados {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <h2>Registro de Chamados</h2>
+        <form id="chamadoForm">
+            <label for="nome">Nome do Funcionário:</label>
+            <input type="text" id="nome" required>
+
+            <label for="setor">Setor:</label>
+            <input type="text" id="setor" required>
+
+            <label for="descricao">Descrição do Problema:</label>
+            <textarea id="descricao" rows="4" required></textarea>
+
+            <label for="urgencia">Nível de Urgência:</label>
+            <select id="urgencia">
+                <option value="Baixo">Baixo</option>
+                <option value="Médio">Médio</option>
+                <option value="Alto">Alto</option>
+            </select>
+
+            <button type="submit">Registrar Chamado</button>
+        </form>
+    </div>
+
+    <div class="container chamados">
+        <h2>Chamados Registrados</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Setor</th>
+                    <th>Descrição</th>
+                    <th>Urgência</th>
+                    <th>Status</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody id="listaChamados">
+                <!-- Os chamados serão adicionados aqui -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let chamados = JSON.parse(localStorage.getItem("chamados")) || [];
+    
+        function atualizarTabela() {
+            const tabela = document.getElementById("listaChamados");
+            tabela.innerHTML = ""; // Limpa a tabela
+    
+            chamados.forEach((chamado, index) => {
+                let novaLinha = tabela.insertRow();
+                novaLinha.innerHTML = `
+                    <td>${chamado.nome}</td>
+                    <td>${chamado.setor}</td>
+                    <td>${chamado.descricao}</td>
+                    <td>${chamado.urgencia}</td>
+                    <td class="status" style="color: ${chamado.status === 'Resolvido' ? 'green' : 'red'}">${chamado.status}</td>
+                    <td><button class="resolverBtn" ${chamado.status === 'Resolvido' ? 'disabled' : ''}>Resolver</button></td>
+                `;
+    
+                novaLinha.querySelector(".resolverBtn").addEventListener("click", function () {
+                    chamados[index].status = "Resolvido";
+                    localStorage.setItem("chamados", JSON.stringify(chamados));
+                    atualizarTabela();
+                });
+            });
+        }
+    
+        document.getElementById("chamadoForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+    
+            let nome = document.getElementById("nome").value;
+            let setor = document.getElementById("setor").value;
+            let descricao = document.getElementById("descricao").value;
+            let urgencia = document.getElementById("urgencia").value;
+    
+            chamados.push({ nome, setor, descricao, urgencia, status: "Pendente" });
+            localStorage.setItem("chamados", JSON.stringify(chamados));
+            atualizarTabela();
+    
+            document.getElementById("chamadoForm").reset();
+        });
+    
+        atualizarTabela();
+    </script>
+</body>
+</html>
