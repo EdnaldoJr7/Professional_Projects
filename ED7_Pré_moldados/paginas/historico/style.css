@@ -1,0 +1,51 @@
+@charset "UTF-8";
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppings', sans-serif;
+}
+
+body{
+    flex-direction: column;
+    background: #000;
+    color: #FFF;
+}
+
+footer {
+    background-color: #0B23E0;
+    color: #FFF;
+    width: 100%;
+    height: 40px;    
+    bottom: 0;
+    text-align: center;
+    margin-top: auto;
+    position: fixed;
+}
+
+footer div nav > a{
+    text-decoration: none;
+    color: white;
+    padding: 15px;
+}
+
+footer div nav a > i{
+    padding-right: 5px;
+}
+
+footer div nav > a:is(:link, :active, :visited).ativo{
+    color: #FFF;
+    background-color: #E0180B;
+}
+
+.item-navbar{
+    padding-right: 25px;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: bolder;
+}
+
+.item-navbar:hover{
+    background-color: #E0180B;
+}
